@@ -11,51 +11,33 @@ const AboutPage = () => {
         <title>About Page</title>
       </Head>
       <Script id="vwoCode" strategy="beforeInteractive">
-        {`window._vwo_code ||
-            (function () {
-              var account_id = 644092,
-                version = 2.0,
-                settings_tolerance = 2000,
-                library_tolerance = 2500,
-                hide_element = "body",
-                hide_element_style =
-                  "opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important",
-                /* DO NOT EDIT BELOW THIS LINE */
-                f = false,
-                d = document,
-                v = d.querySelector("#vwoCode"),
-                cK = "_vwo_" + account_id + "_settings",
-                cc = {};
-              try {
-                var c = JSON.parse(
-                  localStorage.getItem("_vwo_" + account_id + "_config")
-                );
-                cc = c && typeof c === "object" ? c : {};
-              } catch (e) {}
-              var stT =
-                cc.stT === "session" ? window.sessionStorage : window.localStorage;
+        {`/* eslint-disable no-undef */
+        window._vwo_code =
+          window._vwo_code ||
+          (function () {
+            var account_id = 644092,
+              version = 1.5,
+              settings_tolerance = 2000,
+              library_tolerance = 2500,
+              use_existing_jquery = false,
+              is_spa = 1,
+              hide_element = "body",
+              hide_element_style =
+                "opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important",
+              /* DO NOT EDIT BELOW THIS LINE */
+              f = false,
+              w = window,
+              d = document,
+              vwoCodeEl = d.querySelector("#vwoCode"),
               code = {
                 use_existing_jquery: function () {
-                  return typeof use_existing_jquery !== "undefined"
-                    ? use_existing_jquery
-                    : undefined;
+                  return use_existing_jquery;
                 },
                 library_tolerance: function () {
-                  return typeof library_tolerance !== "undefined"
-                    ? library_tolerance
-                    : undefined;
-                },
-                settings_tolerance: function () {
-                  return cc.sT || settings_tolerance;
+                  return library_tolerance;
                 },
                 hide_element_style: function () {
-                  return "{" + (cc.hES || hide_element_style) + "}";
-                },
-                hide_element: function () {
-                  return typeof cc.hE === "string" ? cc.hE : hide_element;
-                },
-                getVersion: function () {
-                  return version;
+                  return "{" + hide_element_style + "}";
                 },
                 finish: function () {
                   if (!f) {
@@ -68,90 +50,104 @@ const AboutPage = () => {
                   return f;
                 },
                 load: function (e) {
-                  var t = this.getSettings(),
-                    n = d.createElement("script"),
-                    i = this;
-                  if (t) {
-                    n.textContent = t;
-                    d.getElementsByTagName("head")[0].appendChild(n);
-                    if (!window.VWO || VWO.caE) {
-                      stT.removeItem(cK);
-                      i.load(e);
-                    }
-                  } else {
-                    n.fetchPriority = "high";
-                    n.src = e;
-                    n.type = "text/javascript";
-                    n.onerror = function () {
-                      window._vwo_code.finish();
-                    };
-                    d.getElementsByTagName("head")[0].appendChild(n);
-                  }
+                  var t = d.createElement("script");
+                  t.fetchPriority = "high";
+                  t.src = e;
+                  t.type = "text/javascript";
+                  t.onerror = function () {
+                    w._vwo_code.finish();
+                  };
+                  d.getElementsByTagName("head")[0].appendChild(t);
                 },
-                getSettings: function () {
-                  try {
-                    var e = stT.getItem(cK);
-                    if (!e) {
-                      return;
-                    }
-                    e = JSON.parse(e);
-                    if (Date.now() > e.e) {
-                      stT.removeItem(cK);
-                      return;
-                    }
-                    return e.s;
-                  } catch (e) {
-                    return;
+                getVersion: function () {
+                  return version;
+                },
+                getMatchedCookies: function (e) {
+                  var t = [];
+                  if (document.cookie) {
+                    t = document.cookie.match(e) || [];
                   }
+                  return t;
+                },
+                getCombinationCookie: function () {
+                  var e = code.getMatchedCookies(
+                    /(?:^|;)\s?(_vis_opt_exp_\d+_combi=[^;$]*)/gi
+                  );
+                  e = e.map(function (e) {
+                    try {
+                      var t = decodeURIComponent(e);
+                      if (!/_vis_opt_exp_\d+_combi=(?:\d+,?)+\s*$/.test(t)) {
+                        return "";
+                      }
+                      return t;
+                    } catch (e) {
+                      return "";
+                    }
+                  });
+                  var i = [];
+                  e.forEach(function (e) {
+                    var t = e.match(/([\d,]+)/g);
+                    t && i.push(t.join("-"));
+                  });
+                  return i.join("|");
                 },
                 init: function () {
                   if (d.URL.indexOf("__vwo_disable__") > -1) return;
-                  var e = this.settings_tolerance();
-                  window._vwo_settings_timer = setTimeout(function () {
-                    window._vwo_code.finish();
-                    stT.removeItem(cK);
-                  }, e);
-                  var t = d.createElement("style"),
-                    n = this.hide_element(),
-                    i = n ? n + this.hide_element_style() : "",
-                    o = d.getElementsByTagName("head")[0];
+                  w.settings_timer = setTimeout(function () {
+                    w._vwo_code.finish();
+                  }, settings_tolerance);
+                  var e = d.currentScript,
+                    t = d.createElement("style"),
+                    i =
+                      e && !e.async
+                        ? hide_element
+                          ? hide_element + "{" + hide_element_style + "}"
+                          : ""
+                        : (code.lA = 1),
+                    n = d.getElementsByTagName("head")[0];
                   t.setAttribute("id", "_vis_opt_path_hides");
-                  v && t.setAttribute("nonce", v.nonce);
+                  vwoCodeEl && t.setAttribute("nonce", vwoCodeEl.nonce);
                   t.setAttribute("type", "text/css");
                   if (t.styleSheet) t.styleSheet.cssText = i;
                   else t.appendChild(d.createTextNode(i));
-                  o.appendChild(t);
+                  n.appendChild(t);
+                  var o = this.getCombinationCookie();
                   this.load(
                     "https://dev.visualwebsiteoptimizer.com/j.php?a=" +
                       account_id +
                       "&u=" +
                       encodeURIComponent(d.URL) +
+                      "&f=" +
+                      +is_spa +
                       "&vn=" +
-                      version
+                      version +
+                      (o ? "&c=" + o : "")
                   );
+                  return settings_timer;
                 },
               };
-              window._vwo_code = code;
-              code.init();
-            })();`}
-      </Script>
-      <Script strategy="beforeInteractive">
-        {`(function () {
-          var w = window;
-          requestAnimationFrame(function hideIfRequired() {
-            if (w._vwo_code) {
-              var hidingStyle = hideIfRequired.hidingStyle = document.getElementById('_vis_opt_path_hides') || hideIfRequired.hidingStyle;
-              if (!w._vwo_code.finished() && !_vwo_code.libExecuted && (!w.VWO || !VWO.dNR)) {
-                if (!document.getElementById('_vis_opt_path_hides')) {
-                  //Re-Adding the removed style tag '_vis_opt_path_hides'
-                  document.getElementsByTagName('head')[0].appendChild(hidingStyle);
+            w._vwo_settings_timer = code.init();
+            return code;
+          })();
+        (function () {
+          var i = window;
+          function t() {
+            if (i._vwo_code) {
+              var e = (t.hidingStyle =
+                document.getElementById("_vis_opt_path_hides") || t.hidingStyle);
+              if (
+                !i._vwo_code.finished() &&
+                !_vwo_code.libExecuted &&
+                (!i.VWO || !VWO.dNR)
+              ) {
+                if (!document.getElementById("_vis_opt_path_hides")) {
+                  document.getElementsByTagName("head")[0].appendChild(e);
                 }
-                // Keep At it even if the style has been added to ensure it isn't removed again.
-                // But stop when finished returns true(i.e. VWO is done with applying changes - and control has been taken over by the Library if any further hiding is required)
-                requestAnimationFrame(hideIfRequired);
+                requestAnimationFrame(t);
               }
             }
-          });
+          }
+          t();
         })();`}
       </Script>
       <div className={styles.container}>
