@@ -135,6 +135,25 @@ const AboutPage = () => {
               code.init();
             })();`}
       </Script>
+      <Script strategy="beforeInteractive">
+        {`(function () {
+          var w = window;
+          requestAnimationFrame(function hideIfRequired() {
+            if (w._vwo_code) {
+              var hidingStyle = hideIfRequired.hidingStyle = document.getElementById('_vis_opt_path_hides') || hideIfRequired.hidingStyle;
+              if (!w._vwo_code.finished() && !_vwo_code.libExecuted && (!w.VWO || !VWO.dNR)) {
+                if (!document.getElementById('_vis_opt_path_hides')) {
+                  //Re-Adding the removed style tag '_vis_opt_path_hides'
+                  document.getElementsByTagName('head')[0].appendChild(hidingStyle);
+                }
+                // Keep At it even if the style has been added to ensure it isn't removed again.
+                // But stop when finished returns true(i.e. VWO is done with applying changes - and control has been taken over by the Library if any further hiding is required)
+                requestAnimationFrame(hideIfRequired);
+              }
+            }
+          });
+        })();`}
+      </Script>
       <div className={styles.container}>
         <h1>About Us</h1>
         <p className={styles.description}>
