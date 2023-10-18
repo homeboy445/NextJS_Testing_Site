@@ -14,7 +14,7 @@ const AboutPage = () => {
         {
           `
           window._vwo_code=window._vwo_code || (function() {
-            var account_id=644092,
+            var account_id=644092, // changed!
             version=1.5,
             settings_tolerance=2000,
             library_tolerance=2500,
