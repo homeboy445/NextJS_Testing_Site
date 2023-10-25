@@ -60,7 +60,9 @@ export default function Home() {
         </div>
 
         <h1>THIS IS A LARGE TEXT!</h1>
-        <StyledButton>Button1</StyledButton>
+        <StyledButton onClick={() => {
+          window.history.pushState(null, null, '/spa');
+        }}>SPA PUSH</StyledButton>
 
         <div className={styles.center}>
           <Image
