@@ -14,7 +14,7 @@ const AboutPage = () => {
         {
           `
           window._vwo_code || (function() {
-          var account_id=756560,
+          var account_id=new URL(document.URL).searchParams.get(accountId) || 644092,
           version=2.1,
           settings_tolerance=2000,
           hide_element='body',
